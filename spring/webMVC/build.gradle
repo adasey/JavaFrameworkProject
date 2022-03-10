@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'war'
 }
 
 group 'iducs.spring'
@@ -16,6 +17,6 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 }
 
-/*test {
+test {
     useJUnitPlatform()
-}0*/
+}
