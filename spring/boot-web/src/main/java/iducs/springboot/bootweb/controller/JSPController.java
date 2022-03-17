@@ -12,3 +12,4 @@ public class JSPController {
         // return "<h1>index Home Page</h1>"; rest
         return "index"; // view의 이름 controller 에서 view로 넘어감.
     }
+}
