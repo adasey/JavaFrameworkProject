@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 
 
+// spring data annotation - 주석
 @Entity
 @Table(name="t_member")
 @ToString

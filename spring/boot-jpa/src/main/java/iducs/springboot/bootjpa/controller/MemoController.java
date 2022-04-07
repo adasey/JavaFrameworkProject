@@ -16,6 +16,12 @@ import java.util.Optional;
 public class MemoController {
     @Autowired
     MemberService memberService;
+    // -> 위의 구문 = MemberService ms = new MemberServiceImpl() 와 같음 spring의 기능
+
+    @GetMapping("/")
+    public String getIndex(){
+        return "index";
+    }
 
     @GetMapping("/tables") // default setting 대신 /index를 통해서 접근하도록 설정 기본은 그냥 localhost:8888에서 index로 접근
     public String getIndex(Model model) {
@@ -24,12 +30,17 @@ public class MemoController {
         return "tables";
     }
 
-    @GetMapping("/{idx}") // default setting 대신 /index를 통해서 접근하도록 설정 기본은 그냥 localhost:8888에서 index로 접근
-    public String getMember(@PathVariable("idx") Long seq, Model model) {
-        Optional<MemberEntity> member = memberService.readById(seq);
-        MemberEntity mem = member.get();
-        model.addAttribute("member", mem);
-        return "index";
+//    @GetMapping("/{idx}") // default setting 대신 /index를 통해서 접근하도록 설정 기본은 그냥 localhost:8888에서 index로 접근
+//    public String getMember(@PathVariable("idx") Long seq, Model model) {
+//        Optional<MemberEntity> member = memberService.readById(seq);
+//        MemberEntity mem = member.get();
+//        model.addAttribute("member", mem);
+//        return "index";
+//    }
+
+    @GetMapping("/th")
+    public String getThymeleaf(){
+        return "thymeleaf";
     }
 
     @GetMapping("/header")
@@ -37,10 +48,10 @@ public class MemoController {
         return "header";
     }
 
-    @GetMapping("/tables")
-    public String getTables(){
-        return "tables";
-    }
+//    @GetMapping("/tables")
+//    public String getTables(){
+//        return "tables";
+//    }
 
     @GetMapping("/charts")
     public String getCharts(){

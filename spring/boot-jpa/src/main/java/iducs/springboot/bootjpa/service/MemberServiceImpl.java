@@ -5,6 +5,7 @@ import iducs.springboot.bootjpa.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Member;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +17,9 @@ public class MemberServiceImpl implements MemberService{
 
     /*
     public MemberServiceImpl(MemberRepository memberRepository) {
-
+        MemberRepository memberRepository = memberRepository;
+        MemberRepository memberRepository = new MemberAccessImpl();
+        MemberRepository memberRepository = new Member
     } */
 
     @Override
