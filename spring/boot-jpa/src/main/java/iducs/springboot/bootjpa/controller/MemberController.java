@@ -1,6 +1,5 @@
 package iducs.springboot.bootjpa.controller;
 
-
 import iducs.springboot.bootjpa.entity.MemberEntity;
 import iducs.springboot.bootjpa.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,7 @@ import java.util.Optional;
 // 모든 페이지는 controll을 통해 접근
 @Controller
 @RequestMapping("/members")
-public class MemoController {
+public class MemberController {
     @Autowired
     MemberService memberService;
     // -> 위의 구문 = MemberService ms = new MemberServiceImpl() 와 같음 spring의 기능
@@ -24,6 +23,21 @@ public class MemoController {
     @GetMapping("/")
     public String getIndex(){
         return "index";
+    }
+
+    @GetMapping("/tables") // default setting 대신 /index를 통해서 접근하도록 설정 기본은 그냥 localhost:8888에서 index로 접근
+    public String getIndex(Model model) {
+        List<MemberEntity> list = memberService.readAll();
+        model.addAttribute("members", list);
+        return "tables";
+    }
+
+    @GetMapping("/tables/{idx}") // default setting 대신 /index를 통해서 접근하도록 설정 기본은 그냥 localhost:8888에서 index로 접근
+    public String getMember(@PathVariable("idx") Long seq, Model model) {
+        Optional<MemberEntity> member = memberService.readById(seq);
+        MemberEntity mem = member.get();
+        model.addAttribute("member", mem);
+        return "tables";
     }
 
     @GetMapping("/th")
@@ -36,10 +50,10 @@ public class MemoController {
         return "header";
     }
 
-    @GetMapping("/tables")
-    public String getTables(){
-        return "tables";
-    }
+//    @GetMapping("/tables")
+//    public String getTables(){
+//        return "tables";
+//    }
 
     @GetMapping("/charts")
     public String getCharts(){
