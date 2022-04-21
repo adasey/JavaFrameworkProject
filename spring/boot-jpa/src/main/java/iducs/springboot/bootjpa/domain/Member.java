@@ -2,13 +2,9 @@ package iducs.springboot.bootjpa.domain;
 
 import lombok.*; // 파이썬처럼 @로 선언하여 해당 클래스나 함수를 @에 해당하는 기능을 사용할 수 있도록 만듬.
 
-@Getter
-@Setter
-@ToString
-@EqualsAndHashCode
-@NoArgsConstructor
-@AllArgsConstructor
-public class MemberDTO { // 레코드 ResultSet 객체를 활용
+@Data
+@Builder
+public class Member { // 레코드 ResultSet 객체를 활용
     private Long seq;
     private String id;
     private String name;
@@ -16,6 +12,7 @@ public class MemberDTO { // 레코드 ResultSet 객체를 활용
     private String email;
     private String phone;
     private String address;
+    // 숫자, 불리언, Date : 날짜, 시간 관련
 
 //    public long getSeq() {
 //        return seq;

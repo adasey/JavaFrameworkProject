@@ -1,44 +1,66 @@
-//package iducs.springboot.bootjpa.controller;
-//
-//import iducs.springboot.bootjpa.entity.MemberEntity;
-//import iducs.springboot.bootjpa.service.MemberService;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Controller;
-//import org.springframework.ui.Model;
-//import org.springframework.web.bind.annotation.GetMapping;
-//import org.springframework.web.bind.annotation.PathVariable;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//
-//import java.util.List;
-//import java.util.Optional;
-//
-//// 모든 페이지는 controll을 통해 접근
-//@Controller
-//@RequestMapping("/members")
-//public class MemberController {
-//    @Autowired
-//    MemberService memberService;
-//    // -> 위의 구문 = MemberService ms = new MemberServiceImpl() 와 같음 spring의 기능
-//
-//    @GetMapping("/")
-//    public String getIndex(){
-//        return "index";
+package iducs.springboot.bootjpa.controller;
+
+import iducs.springboot.bootjpa.domain.Member;
+import iducs.springboot.bootjpa.entity.MemberEntity;
+import iducs.springboot.bootjpa.service.MemberService;
+import iducs.springboot.bootjpa.service.MemberService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+
+// 모든 페이지는 controll을 통해 접근
+@Controller
+@RequestMapping("/members")
+public class MemberController {
+    final MemberService memberService;
+    // -> 위의 구문 = MemberService ms = new MemberServiceImpl() 와 같음 spring의 기능
+    public MemberController(MemberService memberService) { this.memberService = memberService; }
+
+    @GetMapping("/regform")
+    public String getRegform(Model model) {
+        model.addAttribute("member", Member.builder().build());
+        return "/members/regform";
+    }
+
+    @PostMapping("")
+    public String postMember(@ModelAttribute("member") Member member, Model model) {
+        memberService.create(member);
+        model.addAttribute("member", member);
+        return "/members/info";
+    }
+
+    @GetMapping("/info")
+    public String getMembers(Model model) {
+        List<Member> members = memberService.readAll();
+        model.addAttribute("list", members);
+        return "/members/info";
+    }
+
+//    @GetMapping("/{idx}")
+//    public String getMember(@PathVariable("idx") Long mno, Model model) {
+//        Member member = memberService.readById(mno);
+//        model.addAttribute("member", member);
+//        return "/members/member";
 //    }
-//
-//    @GetMapping("/tables") // default setting 대신 /index를 통해서 접근하도록 설정 기본은 그냥 localhost:8888에서 index로 접근
-//    public String getIndex(Model model) {
-//        List<MemberEntity> list = memberService.readAll();
-//        model.addAttribute("members", list);
-//        return "tables";
+
+//    @GetMapping("/{idx}/upform")
+//    public String getUpform(@PathVariable("idx") Long mno, Model model) {
+//        Member member = memberService.readById(mno);
+//        model.addAttribute("member", member);
+//        return "/members/upform";
 //    }
-//
-//    @GetMapping("/tables/{idx}") // default setting 대신 /index를 통해서 접근하도록 설정 기본은 그냥 localhost:8888에서 index로 접근
-//    public String getMember(@PathVariable("idx") Long seq, Model model) {
-//        Optional<MemberEntity> member = memberService.readById(seq);
-//        MemberEntity mem = member.get();
-//        model.addAttribute("member", mem);
-//        return "tables";
+
+//    @PutMapping("/{idx}")
+//    public String putMember(@ModelAttribute("member") Member member, Model model) {
+//        memberService.update(member);
+//        model.addAttribute("member", member);
+//        return "/members/member";
 //    }
+}
 //
 //    @GetMapping("/th")
 //    public String getThymeleaf(){

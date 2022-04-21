@@ -1,54 +1,72 @@
 package iducs.springboot.bootjpa.service;
 
+import iducs.springboot.bootjpa.domain.Member;
 import iducs.springboot.bootjpa.entity.MemberEntity;
 import iducs.springboot.bootjpa.repository.MemberRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Member;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class MemberServiceImpl implements MemberService{
+    final MemberRepository memberRepository;
 
-    @Autowired
-    MemberRepository memberRepository;
-
-    /*
     public MemberServiceImpl(MemberRepository memberRepository) {
-        MemberRepository memberRepository = memberRepository;
-        MemberRepository memberRepository = new MemberAccessImpl();
-        MemberRepository memberRepository = new Member
-    } */
-
-    @Override
-    public int create(MemberEntity member) {
-        return 0;
+        this.memberRepository = memberRepository;
     }
 
     @Override
-    public Optional<MemberEntity> readById(Long seq) {
-        return memberRepository.findById(seq);
+    public void create(Member member) {
+        MemberEntity entity = MemberEntity.builder()
+                .seq(member.getSeq())
+                .id(member.getId())
+                .pw(member.getPw())
+                .name(member.getName())
+                .email(member.getEmail())
+                .phone(member.getPhone())
+                .address(member.getAddress())
+                .build();
+
+        memberRepository.save(entity);
     }
 
     @Override
-    public Optional<MemberEntity> readId(String id) {
-        return Optional.empty();
+    public Member readById(Long seq) {
+        Member member = null;
+
+        Optional<MemberEntity> result = memberRepository.findById(seq);
+
+        if (result.isPresent()) { // result의 값이 입력 받았는가?
+            member = member.builder()
+                    .seq(result.get().getSeq())
+                    .id(result.get().getId())
+                    .pw(result.get().getPw())
+                    .name(result.get().getName())
+                    .email(result.get().getEmail())
+                    .phone(result.get().getPhone())
+                    .address(result.get().getAddress())
+                    .build();
+        }
+
+        return member;
     }
 
     @Override
-    public List<MemberEntity> readAll() {
-        return memberRepository.findAll();
+    public List<Member> readAll() {
+        List<Member> members = null;
+
+        List<MemberEntity> entities = memberRepository.findAll();
+
     }
 
     @Override
-    public int update(MemberEntity member) {
-        return 0;
+    public void update(Member member) {
+
     }
 
     @Override
-    public int delete(MemberEntity member) {
-        return 0;
+    public void delete(Member member) {
+
     }
 }
