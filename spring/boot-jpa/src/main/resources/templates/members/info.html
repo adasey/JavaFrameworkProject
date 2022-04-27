@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1> list of Member </h1>
+    <table border="1" width="50%" height="50">
+        <thead>
+            <tr>
+                <th> seq </th>
+                <th> id </th>
+                <th> pw </th>
+                <th> name </th>
+                <th> email </th>
+                <th> phone </th>
+                <th> address </th>
+            </tr>
+        </thead>
+        <th:block th:each="member:${members}">
+            <tr>
+                <td> <span th:text="${member.seq}"></span> </td>
+                <td> <span th:text="${member.id}"></span> </td>
+                <td> <span th:text="${member.pw}"></span> </td>
+                <td> <span th:text="${member.name}"></span> </td>
+                <td> <span th:text="${member.email}"></span> </td>
+                <td> <span th:text="${member.phone}"></span> </td>
+                <td> <span th:text="${member.address}"></span> </td>
+            </tr>
+        </th:block><br/>
+    </table>
+
+</body>
+</html>

@@ -1,16 +1,12 @@
 package iducs.springboot.bootjpa.controller;
 
 import iducs.springboot.bootjpa.domain.Member;
-import iducs.springboot.bootjpa.entity.MemberEntity;
 import iducs.springboot.bootjpa.service.MemberService;
-import iducs.springboot.bootjpa.service.MemberService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 // 모든 페이지는 controll을 통해 접근
 @Controller
@@ -23,21 +19,22 @@ public class MemberController {
     @GetMapping("/regform")
     public String getRegform(Model model) {
         model.addAttribute("member", Member.builder().build());
-        return "/members/regform";
+        return "members/regform";
     }
 
     @PostMapping("")
     public String postMember(@ModelAttribute("member") Member member, Model model) {
         memberService.create(member);
         model.addAttribute("member", member);
-        return "/members/info";
+        return "members"; // 해당 방식으로 리턴에 getMember 함수 호출 시 URI mapping 적용안됨. 이 post 함수 이후로 members에 접근이 가능하나
+        // URI 상 members와 members/info의 차이가 있으므로 주의
     }
 
     @GetMapping("/info")
     public String getMembers(Model model) {
-        List<Member> members = memberService.readAll();
-        model.addAttribute("list", members);
-        return "/members/info";
+        List<Member> groupMember = memberService.readAll();
+        model.addAttribute("members", groupMember);
+        return "members/info";
     }
 
 //    @GetMapping("/{idx}")

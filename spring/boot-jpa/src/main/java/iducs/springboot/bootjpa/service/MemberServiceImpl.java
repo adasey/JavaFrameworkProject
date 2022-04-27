@@ -5,6 +5,7 @@ import iducs.springboot.bootjpa.entity.MemberEntity;
 import iducs.springboot.bootjpa.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,8 +19,8 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public void create(Member member) {
+        // .seq(member.getSeq())
         MemberEntity entity = MemberEntity.builder()
-                .seq(member.getSeq())
                 .id(member.getId())
                 .pw(member.getPw())
                 .name(member.getName())
@@ -54,9 +55,27 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public List<Member> readAll() {
-        List<Member> members = null;
+        Member member = null;
 
         List<MemberEntity> entities = memberRepository.findAll();
+        List<Member> members = new ArrayList<>(entities.size());
+
+        for (int i = 0; i < entities.size(); i++) {
+
+            member = member.builder()
+                    .seq(entities.get(i).getSeq())
+                    .id(entities.get(i).getId())
+                    .pw(entities.get(i).getPw())
+                    .name(entities.get(i).getName())
+                    .email(entities.get(i).getEmail())
+                    .phone(entities.get(i).getPhone())
+                    .address(entities.get(i).getAddress())
+                    .build();
+
+            members.add(member);
+        }
+
+        return members;
 
     }
 
