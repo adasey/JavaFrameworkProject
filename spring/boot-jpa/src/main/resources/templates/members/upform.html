@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <a th:href="@{'/members/home'}">
+        <h1>Home</h1>
+    </a>
+
+    <h2> upload in members </h2>
+
+    <form action="#" th:action="@{'/members/' + ${member.seq}}" th:object="${member}" th:method="put">
+        seq : <input type="text" name="memberText" th:field="*{seq}" th:value="*{seq}" readonly/><br>
+        id : <input type="text" name="memberText" th:field="*{id}" th:value="*{id}"/><br>
+        name : <input type="text" name="memberText" th:field="*{name}" th:value="*{name}"/><br>
+        pw : <input type="text" name="memberText" th:field="*{pw}" th:value="*{pw}"/><br>
+        email : <input type="text" name="memberText" th:field="*{email}" th:value="*{email}"/><br>
+        phone : <input type="text" name="memberText" th:field="*{phone}" th:value="*{phone}"/><br>
+        address : <input type="text" name="memberText" th:field="*{address}" th:value="*{address}"/><br>
+        <input type="submit" value="update"/>
+    </form>
+
+</body>
+</html>

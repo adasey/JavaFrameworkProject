@@ -20,14 +20,7 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public void create(Member member) {
         // .seq(member.getSeq())
-        MemberEntity entity = MemberEntity.builder()
-                .id(member.getId())
-                .pw(member.getPw())
-                .name(member.getName())
-                .email(member.getEmail())
-                .phone(member.getPhone())
-                .address(member.getAddress())
-                .build();
+        MemberEntity entity = dtoToEntity(member);
 
         memberRepository.save(entity);
     }
@@ -39,15 +32,7 @@ public class MemberServiceImpl implements MemberService{
         Optional<MemberEntity> result = memberRepository.findById(seq);
 
         if (result.isPresent()) { // result의 값이 입력 받았는가?
-            member = member.builder()
-                    .seq(result.get().getSeq())
-                    .id(result.get().getId())
-                    .pw(result.get().getPw())
-                    .name(result.get().getName())
-                    .email(result.get().getEmail())
-                    .phone(result.get().getPhone())
-                    .address(result.get().getAddress())
-                    .build();
+            member = entityToDto(result.get());
         }
 
         return member;
@@ -55,23 +40,12 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public List<Member> readAll() {
-        Member member = null;
-
+        List<Member> members = new ArrayList<>();
         List<MemberEntity> entities = memberRepository.findAll();
-        List<Member> members = new ArrayList<>(entities.size());
+        // JpaRepository 구현체의 메소드 findAll(), List<T>
 
-        for (int i = 0; i < entities.size(); i++) {
-
-            member = member.builder()
-                    .seq(entities.get(i).getSeq())
-                    .id(entities.get(i).getId())
-                    .pw(entities.get(i).getPw())
-                    .name(entities.get(i).getName())
-                    .email(entities.get(i).getEmail())
-                    .phone(entities.get(i).getPhone())
-                    .address(entities.get(i).getAddress())
-                    .build();
-
+        for (MemberEntity entity : entities) {
+            Member member = entityToDto(entity);
             members.add(member);
         }
 
@@ -79,13 +53,45 @@ public class MemberServiceImpl implements MemberService{
 
     }
 
+    public Member entityToDto(MemberEntity entity) {
+        Member member = Member.builder()
+                .seq(entity.getSeq())
+                .id(entity.getId())
+                .pw(entity.getPw())
+                .name(entity.getName())
+                .email(entity.getEmail())
+                .phone(entity.getPhone())
+                .address(entity.getAddress())
+                .build();
+
+        return member;
+    }
+
+    public MemberEntity dtoToEntity(Member member) {
+        MemberEntity entity = MemberEntity.builder()
+                .seq(member.getSeq())
+                .id(member.getId())
+                .pw(member.getPw())
+                .name(member.getName())
+                .email(member.getEmail())
+                .phone(member.getPhone())
+                .address(member.getAddress())
+                .build();
+
+        return entity;
+    }
+
     @Override
     public void update(Member member) {
+        MemberEntity entity = dtoToEntity(member);
 
+        memberRepository.save(entity);
     }
 
     @Override
     public void delete(Member member) {
-
+        MemberEntity entity = dtoToEntity(member);
+        //memberRepository.delete(entity); entity로 들어온 값 삭제
+        memberRepository.deleteById(entity.getSeq());
     }
 }

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<!--    <div th:replace="head :: nav"></div>-->
+    <a th:href="@{'/members/home'}">
+        <h1>Home</h1>
+    </a>
+
+    <br>
+    <a th:href="@{'/members/info'}">
+        <button>
+            목록
+        </button>
+    </a>
+    <br>
+    <a th:href="@{'/members/regform'}">
+        <button>
+            등록
+        </button>
+    </a>
+</body>
+</html>

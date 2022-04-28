@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+    <a th:href="@{'/members/info'}">
+        <h1>Info</h1>
+    </a>
+
+    <h2> delete in members </h2>
+
+    <form action="#" th:action="@{'/members/' + ${member.seq}}" th:object="${member}" th:method="delete">
+        seq : <input type="text" name="memberText" th:field="*{seq}" th:value="*{seq}" readonly/><br>
+        id : <input type="text" name="memberText" th:field="*{id}" th:value="*{id}"/><br>
+        <input type="submit" value="delete"/>
+    </form>
+
+</body>
+</html>
