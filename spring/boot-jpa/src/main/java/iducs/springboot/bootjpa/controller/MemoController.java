@@ -10,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 // 모든 페이지는 controll을 통해 접근
 @Controller
@@ -33,7 +32,7 @@ public class MemoController {
         return "memos/memo";
     }
 
-    @GetMapping("/")
+    @GetMapping("/memo")
     public String getMemos(Model model) {
         List<Memo> memos = memoService.readAll();
         model.addAttribute("list", memos);

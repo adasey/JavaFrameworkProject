@@ -4,6 +4,8 @@ import lombok.*; // 파이썬처럼 @로 선언하여 해당 클래스나 함수
 
 @Data
 @Builder
+// client -> controller -> service 에서 교환됨
+// client <- (view | data - api) controller <- service
 public class Member { // 레코드 ResultSet 객체를 활용
     private Long seq;
     private String id;

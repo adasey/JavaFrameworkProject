@@ -5,48 +5,47 @@
     <title>Title</title>
 </head>
 <body>
-    <a th:href="@{'/members/info'}">
-        <h1>info</h1>
-    </a>
 
-    <h2> Get By SEQ in members </h2>
-    <table border="1" width="50%" height="50">
-        <thead>
-            <tr>
-                <th> seq </th>
-                <th> id </th>
-                <th> pw </th>
-                <th> name </th>
-                <th> email </th>
-                <th> phone </th>
-                <th> address </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><span th:text="${member.id}"></span> </td>
-                <td><span th:text="${member.name}"></span> </td>
-                <td><span th:text="${member.pw}"></span> </td>
-                <td><span th:text="${member.email}"></span> </td>
-                <td><span th:text="${member.phone}"></span> </td>
-                <td><span th:text="${member.address}"></span> </td>
-            </tr>
-        </tbody>
-    </table>
+<a th:href="@{'/members/home'}">
+    <h1>Home</h1>
+</a>
 
-    <br>
+<!--    <div th:replace="head :: nav"></div>-->
+<h2> list of Member </h2>
+<table border="1" width="50%" height="50">
+    <thead>
+    <tr>
+        <th> seq </th>
+        <th> id </th>
+        <th> pw </th>
+        <th> name </th>
+        <th> email </th>
+        <th> phone </th>
+        <th> address </th>
+    </tr>
+    </thead>
+    <th:block th:each="member:${members}">
+        <tr>
+            <td>
+                <a th:href="@{'/members/' + ${member.seq}}">
+                    <span th:text="${member.seq}"></span>
+                </a>
+            </td>
+            <td> <span th:text="${member.id}"></span> </td>
+            <td> <span th:text="${member.pw}"></span> </td>
+            <td> <span th:text="${member.name}"></span> </td>
+            <td> <span th:text="${member.email}"></span> </td>
+            <td> <span th:text="${member.phone}"></span> </td>
+            <td> <span th:text="${member.address}"></span> </td>
+        </tr>
+    </th:block><br/>
+</table>
 
-    <a th:href="@{'../members/' + ${member.seq} + '/upform'}">
-        <button>
-            수정
-        </button>
-    </a>
-
-    <a th:href="@{'../members/' + ${member.seq} + '/delform'}">
-        <button>
-            삭제
-        </button>
-    </a>
+<a th:href="@{'../members/regform'}">
+    <button>
+        등록
+    </button>
+</a>
 
 </body>
 </html>

@@ -38,18 +38,18 @@ public class MemberController {
         return "members/home";
     }
 
-    @GetMapping("/info")
-    public String getInfo(Model model) {
+    @GetMapping("/member")
+    public String getMembers(Model model) {
         List<Member> groupMember = memberService.readAll();
         model.addAttribute("members", groupMember);
-        return "members/info";
+        return "members/member";
     }
 
     @GetMapping("/{idx}")
     public String getMember(@PathVariable("idx") Long seq, Model model) {
         Member member = memberService.readById(seq);
         model.addAttribute("member", member);
-        return "members/member";
+        return "members/info";
     }
 
     @GetMapping("/{idx}/upform")
@@ -77,7 +77,7 @@ public class MemberController {
     public String delMember(@ModelAttribute("member") Member member, Model model) {
         memberService.delete(member);
         model.addAttribute("member", member);
-        return "redirect:members/info"; // members/info에 새롭게
+        return "redirect:members/member"; // members/member에 새롭게
     }
 }
 //    @GetMapping("/{idx}")
