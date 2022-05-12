@@ -1,6 +1,7 @@
 package iducs.springboot.bootjpa.controller;
 
 import iducs.springboot.bootjpa.domain.Member;
+import iducs.springboot.bootjpa.domain.PageRequestDTO;
 import iducs.springboot.bootjpa.service.MemberService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,9 +40,8 @@ public class MemberController {
     }
 
     @GetMapping("/member")
-    public String getMembers(Model model) {
-        List<Member> groupMember = memberService.readAll();
-        model.addAttribute("list", groupMember);
+    public String getMembers(PageRequestDTO pageRequestDTO, Model model) {
+        model.addAttribute("list", memberService.readListBy(pageRequestDTO));
         return "members/member";
     }
 
