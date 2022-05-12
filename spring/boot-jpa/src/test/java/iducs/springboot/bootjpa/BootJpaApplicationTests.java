@@ -18,20 +18,35 @@ class BootJpaApplicationTests {
     @Autowired
     MemberRepository memberRepository;
 
-    @Test // Unit Test : JUnit 도구 활용 -> 통합 테스트(Integration Test) 사이즈가 클 수록 unit test 하기.
-    void contextLoads() { // Integer 데이터 흐름, Lambda 식 - 함수형 언어의 특징을 활용
-        IntStream.rangeClosed(1, 10).forEach(i -> {
-            MemberEntity member =
-                    MemberEntity.builder().id("id" + i).pw("pw" + i).name("name" + i).build();
-            memberRepository.save(member); // insert 문
+//    @Test // Unit Test : JUnit 도구 활용 -> 통합 테스트(Integration Test) 사이즈가 클 수록 unit test 하기.
+//    void contextLoads() { // Integer 데이터 흐름, Lambda 식 - 함수형 언어의 특징을 활용
+//        IntStream.rangeClosed(1, 10).forEach(i -> {
+//            MemberEntity member =
+//                    MemberEntity.builder().id("id" + i).pw("pw" + i).name("name" + i).build();
+//            memberRepository.save(member); // insert 문
+//
+////            member = MemberEntity.builder().pw("pw" + i).build();
+////            member = MemberEntity.builder().name("name" + i).build();
+////            member = MemberEntity.builder().pw("email" + i).build();
+////            member = MemberEntity.builder().pw("phone" + i).build();
+////            member = MemberEntity.builder().pw("pw" + i).build();
+////            member = MemberEntity.builder().pw("pw" + i).build();
+////            memoRepository.save(memo);
+//        });
+//    }
 
-//            member = MemberEntity.builder().pw("pw" + i).build();
-//            member = MemberEntity.builder().name("name" + i).build();
-//            member = MemberEntity.builder().pw("email" + i).build();
-//            member = MemberEntity.builder().pw("phone" + i).build();
-//            member = MemberEntity.builder().pw("pw" + i).build();
-//            member = MemberEntity.builder().pw("pw" + i).build();
-//            memoRepository.save(memo);
+    @Test
+    void testMemberInitialize() {
+        IntStream.rangeClosed(1, 50).forEach(i -> {
+            MemberEntity entity = MemberEntity.builder()
+                    .id("id " + i)
+                    .pw("pw " + i)
+                    .name("name " + i)
+                    .email("email " + i)
+                    .phone("phone" + i)
+                    .address("address " + i)
+                    .build();
+            memberRepository.save(entity);
         });
     }
 }

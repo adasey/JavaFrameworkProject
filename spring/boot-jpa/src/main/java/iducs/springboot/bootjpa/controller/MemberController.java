@@ -29,25 +29,28 @@ public class MemberController {
     public String postMember(@ModelAttribute("member") Member member, Model model) {
         memberService.create(member);
         model.addAttribute("member", member);
-        return "redirect:members/home"; // 해당 방식으로 리턴에 getMember 함수 호출 시 URI mapping 적용안됨. 이 post 함수 이후로 members에 접근이 가능하나
+        return "redirect:members/member"; // 해당 방식으로 리턴에 getMember 함수 호출 시 URI mapping 적용안됨. 이 post 함수 이후로 members에 접근이 가능하나
         // URI 상 members와 members/info의 차이가 있으므로 주의
     }
 
-    @GetMapping("/home")
+    @GetMapping("")
     public String getHome() {
-        return "members/home";
+        return "members/member";
     }
 
     @GetMapping("/member")
     public String getMembers(Model model) {
         List<Member> groupMember = memberService.readAll();
-        model.addAttribute("members", groupMember);
+        model.addAttribute("list", groupMember);
         return "members/member";
     }
 
     @GetMapping("/{idx}")
     public String getMember(@PathVariable("idx") Long seq, Model model) {
         Member member = memberService.readById(seq);
+        if (member == null) {
+            return "members/member";
+        }
         model.addAttribute("member", member);
         return "members/info";
     }
@@ -63,7 +66,7 @@ public class MemberController {
     public String putMember(@ModelAttribute("member") Member member, Model model) {
         memberService.update(member);
         model.addAttribute("member", member);
-        return "members/member";
+        return "member";
     }
 
     @GetMapping("/{idx}/delform")
