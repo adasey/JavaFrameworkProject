@@ -2,7 +2,7 @@ package iducs.springboot.bootjpa.domain;
 
 import lombok.*; // 파이썬처럼 @로 선언하여 해당 클래스나 함수를 @에 해당하는 기능을 사용할 수 있도록 만듬.
 
-@Data
+@Data // @Getter, @Setter, @Equalsandhash, @Requiredargsconstructor
 @Builder
 // client -> controller -> service 에서 교환됨
 // client <- (view | data - api) controller <- service
