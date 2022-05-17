@@ -20,10 +20,10 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    @GetMapping("/regform")
+    @GetMapping("/registerForm")
     public String getRegform(Model model) {
         model.addAttribute("member", Member.builder().build());
-        return "members/regform";
+        return "members/registerForm";
     }
 
     @PostMapping("")
@@ -35,8 +35,8 @@ public class MemberController {
     }
 
     @GetMapping("")
-    public String getHome() {
-        return "members/member";
+    public String getIndex() {
+        return "members/index";
     }
 
     @GetMapping("/member")
@@ -55,11 +55,11 @@ public class MemberController {
         return "members/info";
     }
 
-    @GetMapping("/{idx}/upform")
+    @GetMapping("/{idx}/updateForm")
     public String getUpform(@PathVariable("idx") Long seq, Model model) {
         Member member = memberService.readById(seq);
         model.addAttribute("member", member);
-        return "members/upform";
+        return "members/updateForm";
     }
 
     @PutMapping("/{idx}")
@@ -80,7 +80,7 @@ public class MemberController {
     public String delMember(@ModelAttribute("member") Member member, Model model) {
         memberService.delete(member);
         model.addAttribute("member", member);
-        return "redirect:members/member"; // members/member에 새롭게
+        return "redirect:/member"; // members/member에 새롭게
     }
 }
 //    @GetMapping("/{idx}")
