@@ -16,7 +16,6 @@ import java.util.Optional;
 @RequestMapping("/memos")
 public class MemoController {
     final MemoService memoService;
-    // -> 위의 구문 = MemberService ms = new MemberServiceImpl() 와 같음 spring의 기능
     public MemoController(MemoService memoService) { this.memoService = memoService; }
 
     @GetMapping("/regform")
