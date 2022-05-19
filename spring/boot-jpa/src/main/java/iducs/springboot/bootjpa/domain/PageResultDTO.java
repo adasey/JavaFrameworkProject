@@ -21,8 +21,8 @@ public class PageResultDTO<DTO, EN> { // Generics
     private boolean prevPage, nextPage;// 이전 페이지 또는 다음 페이지 존재 유무
     // 페이지 번호 목록
     private List<Integer> pageList;
-    public PageResultDTO(Page<EN> result, Function<EN, DTO> fn) {
-        dtoList = result.stream().map(fn).collect(Collectors.toList());
+    public PageResultDTO(Page<EN> result, Function<EN, DTO> fn) { // 결과 객체를 초기화 하는 생성자
+        dtoList = result.stream().map(fn).collect(Collectors.toList()); // 받아오는 result 값에 대한 매핑
         totalPage = result.getTotalPages();
         makePageList(result.getPageable());
     }
@@ -36,6 +36,7 @@ public class PageResultDTO<DTO, EN> { // Generics
 
         // currentPage = 12, 12 / 10.0 = 1.2 -> Math.ceil(1.2) 올림 2 * 10 : 20
         // startPage 11, end 20
+
         int tempEnd = (int)(Math.ceil(currentPage/pageDouble)) * sizeOfPage;
 
         startPage = tempEnd - (sizeOfPage - 1);

@@ -7,8 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 // 모든 페이지는 controll을 통해 접근
 @Controller
 @RequestMapping("/members")
@@ -30,7 +28,7 @@ public class MemberController {
     public String postMember(@ModelAttribute("member") Member member, Model model) {
         memberService.create(member);
         model.addAttribute("member", member);
-        return "redirect:members/member"; // 해당 방식으로 리턴에 getMember 함수 호출 시 URI mapping 적용안됨. 이 post 함수 이후로 members에 접근이 가능하나
+        return "redirect:members/lists"; // 해당 방식으로 리턴에 getMember 함수 호출 시 URI mapping 적용안됨. 이 post 함수 이후로 members에 접근이 가능하나
         // URI 상 members와 members/info의 차이가 있으므로 주의
     }
 
@@ -39,17 +37,17 @@ public class MemberController {
         return "members/index";
     }
 
-    @GetMapping("/member")
+    @GetMapping("/lists")
     public String getMembers(PageRequestDTO pageRequestDTO, Model model) {
         model.addAttribute("list", memberService.readListBy(pageRequestDTO));
-        return "members/member";
+        return "members/lists";
     }
 
     @GetMapping("/{idx}")
     public String getMember(@PathVariable("idx") Long seq, Model model) {
         Member member = memberService.readById(seq);
         if (member == null) {
-            return "members/member";
+            return "members/lists";
         }
         model.addAttribute("member", member);
         return "members/info";
@@ -65,24 +63,24 @@ public class MemberController {
     @PutMapping("/{idx}")
     public String putMember(@ModelAttribute("member") Member member, Model model) {
         memberService.update(member);
+        // 전체 값을 넘겨서 update 할 시 문제점 : seq가 오류나 html에서 넘어가지 않으면 새로 insert하게 됨. 아예 업데이트가 이루어지지 않아야함.
         model.addAttribute("member", member);
-        return "member";
-    }
-
-    @GetMapping("/{idx}/delform")
-    public String getDelform(@PathVariable("idx") Long seq, Model model) {
-        Member member = memberService.readById(seq);
-        model.addAttribute("member", member);
-        return "members/delform";
+        return "redirect:members/lists";
     }
 
     @DeleteMapping("/{idx}")
-    public String delMember(@ModelAttribute("member") Member member, Model model) {
-        memberService.delete(member);
-        model.addAttribute("member", member);
-        return "redirect:/member"; // members/member에 새롭게
+    public String delMember(@ModelAttribute("idx") Long seq) {
+        memberService.delete(memberService.readById(seq));
+        return "redirect:/members/lists"; // members/member에 새롭게
     }
 }
+//    @GetMapping("/{idx}/deleteForm")
+//    public String getDelform(@PathVariable("idx") Long seq, Model model) {
+//        Member member = memberService.readById(seq);
+//        model.addAttribute("member", member);
+//        return "members/member";
+//    }
+
 //    @GetMapping("/{idx}")
 //    public String getMember(@PathVariable("idx") Long mno, Model model) {
 //        Member member = memberService.readById(mno);
