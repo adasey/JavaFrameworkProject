@@ -5,8 +5,8 @@ import iducs.springboot.bootjpa.entity.MemoEntity;
 import iducs.springboot.bootjpa.repository.MemoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class MemoServiceImpl implements MemoService {
@@ -18,44 +18,61 @@ public class MemoServiceImpl implements MemoService {
 
     @Override
     public void create(Memo memo) {
-        MemoEntity entity = MemoEntity.builder()
-                .mno(memo.getMno())
-                .memoText(memo.getMemoText())
-                .build();
+        MemoEntity entity = dtoToEntity(memo);
 
         memoRepository.save(entity);
     }
 
     @Override
     public Memo readById(Long mno) {
-        Memo memo = null;
-        Optional<MemoEntity> result = memoRepository.findById(mno);
-        if(result.isPresent()) {
-            memo = Memo.builder()
-                    .mno(result.get().getMno())
-                    .memoText(result.get().getMemoText())
-                    .build();
-        }
-        return memo;
+        MemoEntity entity = memoRepository.findById(mno).get();
 
+        Memo memo = entityToDto(entity);
+
+        return memo;
     }
 
     @Override
     public List<Memo> readAll() {
-        return null;
+        List<Memo> memos = new ArrayList<>();
+        List<MemoEntity> entities = memoRepository.findAll();
+        // JpaRepository 구현체의 메소드 findAll(), List<T>
+
+        for (MemoEntity entity : entities) {
+            Memo memo = entityToDto(entity);
+            memos.add(memo);
+        }
+
+        return memos;
     }
 
     @Override
     public void update(Memo memo) {
-        MemoEntity entity = MemoEntity.builder()
-                .mno(memo.getMno())
-                .memoText(memo.getMemoText())
-                .build();
+        MemoEntity entity = dtoToEntity(memo);
         memoRepository.save(entity);
     }
 
     @Override
     public void delete(Memo memo) {
+        MemoEntity entity = dtoToEntity(memo);
+        memoRepository.deleteById(entity.getMno());
+    }
 
+    public Memo entityToDto(MemoEntity entity) {
+        Memo memo = Memo.builder()
+                .mno(entity.getMno())
+                .memoText(entity.getMemoText())
+                .build();
+
+        return memo;
+    }
+
+    public MemoEntity dtoToEntity(Memo memo) {
+        MemoEntity entity = MemoEntity.builder()
+                .mno(memo.getMno())
+                .memoText(memo.getMemoText())
+                .build();
+
+        return entity;
     }
 }

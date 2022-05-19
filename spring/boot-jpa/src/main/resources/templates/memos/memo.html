@@ -5,10 +5,30 @@
     <title>Title</title>
 </head>
 <body>
-    <h1> Get By ID in memos </h1>
+
+    <a th:href="@{'/memos/memo'}">
+        <h1>Home</h1>
+    </a>
+
+    <!--    <div th:replace="head :: nav"></div>-->
+    <h2> list of Member </h2>
     <table border="1" width="50%" height="50">
-        <tr><span th:text="${memo.mno}"></span> </tr>
-        <tr><span th:text="${memo.memoText}"></span> </tr>
+        <thead>
+        <tr>
+            <th> mno </th>
+            <th> memo Text </th>
+        </tr>
+        </thead>
+        <th:block th:each="memo:${memos}">
+            <tr>
+                <td>
+                    <a th:href="@{'/memos/' + ${memo.mno}}">
+                        <span th:text="${memo.mno}"></span>
+                    </a>
+                </td>
+                <td> <span th:text="${memo.memoText}"></span> </td>
+            </tr>
+        </th:block><br/>
     </table>
 
 </body>
