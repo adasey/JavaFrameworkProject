@@ -49,6 +49,20 @@
 
                 <div class="card-tools">
                   <div class="card-group">
+                    <ul class="nav nav-pills ml-auto">
+                      <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/members/lists(page=${page}, order=${0}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword})}" data-toggle="tab">내림차순</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" th:href="@{/members/lists(page=${page}, order=${1}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword})}" data-toggle="tab">오름차순</a>
+                      </li>
+                    </ul>
+
+<!--                    <div th:switch="${pageRequestDTO.type != null ? true : null}">-->
+<!--                      <a th:case="${true}" th:href="@{/members/lists(order=1, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword})}">true</a>-->
+<!--                      <a th:case="${null}" th:href="@{/members/lists(page=${page})}">null</a>-->
+<!--                    </div>-->
+
                     <form th:action="@{'/members/lists'}" th:method="get">
                       <div class="input-group input-group-sm" style="width: 350px;">
                         <select class="form-control" name="type">
@@ -104,19 +118,31 @@
                   <ul class="pagination justify-content-center m-0">
 <!--                    <li class="page-item active"><a class="page-link" href="#">1</a></li>-->
 <!--                    <li class="page-item"><a class="page-link" href="#">2</a></li>-->
+                    <li class="page-item" th:if="${list.firstPage}">
+                      <a class="page-link" th:href="@{/members/lists(page=1, type=${pageRequestDTO.type}, order=${pageRequestDTO.order}, keyword=${pageRequestDTO.keyword})}">
+                        <b><<</b>
+                      </a>
+                    </li>
+
                     <li class="page-item" th:if="${list.prevPage}">
-                      <a class="page-link" th:href="@{/members/lists(page=${list.startPage - 1}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword})}">
+                      <a class="page-link" th:href="@{/members/lists(page=${list.startPage - 1}, order=${pageRequestDTO.order}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword})}">
                         <b><</b>
                       </a>
                     </li>
 
                     <li th:class="'page-item' + ${list.currentPage == page? ' active':''}" th:each="page : ${list.pageList}">
-                      <a class="page-link" th:href="@{/members/lists(page=${page}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword})}">[[${page}]]</a>
+                      <a class="page-link" th:href="@{/members/lists(page=${page}, order=${pageRequestDTO.order}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword})}">[[${page}]]</a>
                     </li>
 
                     <li class="page-item" th:if="${list.nextPage}">
-                      <a class="page-link" th:href="@{/members/lists(page=${list.endPage + 1}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword})}">
+                      <a class="page-link" th:href="@{/members/lists(page=${list.endPage + 1}, order=${pageRequestDTO.order}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword})}">
                         <b>></b>
+                      </a>
+                    </li>
+
+                    <li class="page-item" th:if="${list.lastPage}">
+                      <a class="page-link" th:href="@{/members/lists(page=${list.totalPage}, order=${pageRequestDTO.order}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword})}">
+                        <b>>></b>
                       </a>
                     </li>
 

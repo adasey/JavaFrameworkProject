@@ -18,9 +18,11 @@ public class PageResultDTO<DTO, EN> { // Generics
     private int sizeOfPage; // 페이지 당 크기
 
     private int startPage, endPage; // 페이지 목록의 시작 페이지 번호, 마지막 페이지 번호
+    private boolean firstPage, lastPage;
     private boolean prevPage, nextPage;// 이전 페이지 또는 다음 페이지 존재 유무
     // 페이지 번호 목록
     private List<Integer> pageList;
+
     public PageResultDTO(Page<EN> result, Function<EN, DTO> fn) { // 결과 객체를 초기화 하는 생성자
         dtoList = result.stream().map(fn).collect(Collectors.toList()); // 받아오는 result 값에 대한 매핑
         totalPage = result.getTotalPages();
@@ -43,6 +45,9 @@ public class PageResultDTO<DTO, EN> { // Generics
         endPage = (totalPage > tempEnd) ? tempEnd: totalPage;
         prevPage = startPage > 1;
         nextPage = totalPage > tempEnd;
+
+        firstPage = prevPage;
+        lastPage = nextPage;
 
         // 아래쪽 Pagination 처리 시 사용
         pageList = IntStream.rangeClosed(startPage, endPage).boxed().collect(Collectors.toList());

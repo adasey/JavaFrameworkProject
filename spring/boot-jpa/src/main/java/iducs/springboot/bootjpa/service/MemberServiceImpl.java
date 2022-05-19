@@ -59,20 +59,24 @@ public class MemberServiceImpl implements MemberService{
         }
 
         return members;
-
     }
 
     @Override
     public PageResultDTO<Member, MemberEntity> readListBy(PageRequestDTO pageRequestDTO) {
-        Pageable pageable = pageRequestDTO.getPageable(Sort.by("seq").descending());
+        Sort sorted;
 
-        if (pageRequestDTO.isAscending()) {
-            pageable = pageRequestDTO.getPageable(Sort.by("seq").ascending());
+        if (pageRequestDTO.getOrder() == 1) {
+            sorted = Sort.by("seq").ascending();
+        }
+        else {
+            sorted = Sort.by("seq").descending();
         }
 
+        Pageable pageable = pageRequestDTO.getPageable(sorted);
+
         BooleanBuilder booleanBuilder = findByCondition(pageRequestDTO);
+
         Page<MemberEntity> result = memberRepository.findAll(booleanBuilder, pageable);
-//        Page<MemberEntity> result = memberRepository.findAll(pageable);
         Function<MemberEntity, Member> fn = (entity -> entityToDto(entity));
         return new PageResultDTO<>(result, fn);
     }
@@ -100,6 +104,7 @@ public class MemberServiceImpl implements MemberService{
             conditionBuilder.or(qMemberEntity.phone.contains(keyword));
         if(type.contains("a")) // address로 검색
             conditionBuilder.or(qMemberEntity.address.contains(keyword));
+
         booleanBuilder.and(conditionBuilder);
         return booleanBuilder; // 완성된 조건 or 술어(predicate)
     }
