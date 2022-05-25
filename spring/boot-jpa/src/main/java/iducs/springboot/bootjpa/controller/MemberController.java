@@ -3,6 +3,7 @@ package iducs.springboot.bootjpa.controller;
 import iducs.springboot.bootjpa.domain.Member;
 import iducs.springboot.bootjpa.domain.PageRequestDTO;
 import iducs.springboot.bootjpa.service.MemberService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,13 +11,14 @@ import org.springframework.web.bind.annotation.*;
 // 모든 페이지는 controll을 통해 접근
 @Controller
 @RequestMapping("/members")
+@RequiredArgsConstructor
 public class MemberController {
-    final MemberService memberService;
+    private final MemberService memberService;
 
     // -> 위의 구문 = MemberService ms = new MemberServiceImpl() 와 같음 spring의 기능
-    public MemberController(MemberService memberService) {
-        this.memberService = memberService;
-    }
+//    public MemberController(MemberService memberService) {
+//        this.memberService = memberService;
+//    }
 
     @GetMapping("/registerForm")
     public String getRegform(Model model) {

@@ -3,6 +3,7 @@ package iducs.springboot.bootjpa;
 import iducs.springboot.bootjpa.domain.Member;
 import iducs.springboot.bootjpa.entity.MemberEntity;
 import iducs.springboot.bootjpa.repository.MemberRepository;
+import iducs.springboot.bootjpa.service.MemberService;
 import iducs.springboot.bootjpa.service.MemberServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ class BootJpaApplicationTests {
 //    }
 
     @Test
-    void 회원추가테스트() {
+    void memberCreateLotsTest() {
         IntStream.rangeClosed(1, 50).forEach(i -> {
             MemberEntity entity = MemberEntity.builder()
                     .id("id " + i)

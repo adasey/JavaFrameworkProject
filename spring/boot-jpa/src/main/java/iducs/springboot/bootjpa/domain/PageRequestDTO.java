@@ -21,5 +21,7 @@ public class PageRequestDTO {
         this.size = 5;
     }
 
-    public PageRequest getPageable(Sort sort) { return PageRequest.of(page - 1, size, sort); }
+    public PageRequest getPageable(Sort sort) {
+        return PageRequest.of(page - 1, size, sort);
+    }
 }

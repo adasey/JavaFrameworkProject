@@ -8,6 +8,7 @@ import iducs.springboot.bootjpa.domain.PageResultDTO;
 import iducs.springboot.bootjpa.entity.MemberEntity;
 import iducs.springboot.bootjpa.entity.QMemberEntity;
 import iducs.springboot.bootjpa.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -19,12 +20,9 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @Service
-public class MemberServiceImpl implements MemberService{
-    final MemberRepository memberRepository;
-
-    public MemberServiceImpl(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
+@RequiredArgsConstructor
+public class MemberServiceImpl implements MemberService {
+    private final MemberRepository memberRepository;
 
     @Override
     public void create(Member member) {
@@ -110,7 +108,7 @@ public class MemberServiceImpl implements MemberService{
     }
 
 
-        @Override
+    @Override
     public void update(Member member) {
         MemberEntity entity = dtoToEntity(member);
 
