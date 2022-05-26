@@ -51,10 +51,10 @@
                   <div class="card-group">
                     <ul class="nav nav-pills ml-auto">
                       <li class="nav-item">
-                        <a class="nav-link active" th:href="@{/members/lists(page=${page}, order=${0}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword})}" data-toggle="tab">내림차순</a>
+                        <a class="nav-link active" th:href="@{/members/lists(page=${page}, order=${0}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword})}" data-toggle="tab" th:selected="${pageRequestDTO.order == 0}">내림차순</a>
                       </li>
                       <li class="nav-item">
-                        <a class="nav-link" th:href="@{/members/lists(page=${page}, order=${1}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword})}" data-toggle="tab">오름차순</a>
+                        <a class="nav-link" th:href="@{/members/lists(page=${page}, order=${1}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword})}" data-toggle="tab" th:selected="${pageRequestDTO.order == 0}">오름차순</a>
                       </li>
                     </ul>
 

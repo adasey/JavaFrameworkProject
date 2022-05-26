@@ -19,9 +19,6 @@ class BootJpaApplicationTests {
     @Autowired
     MemberRepository memberRepository;
 
-    @Autowired
-    MemberServiceImpl memberService;
-
 //    @Test // Unit Test : JUnit 도구 활용 -> 통합 테스트(Integration Test) 사이즈가 클 수록 unit test 하기.
 //    void contextLoads() { // Integer 데이터 흐름, Lambda 식 - 함수형 언어의 특징을 활용
 //        IntStream.rangeClosed(1, 10).forEach(i -> {
@@ -51,7 +48,7 @@ class BootJpaApplicationTests {
                     .address("address " + i)
                     .build();
 
-            memberService.create(memberService.entityToDto(entity));
+            memberRepository.save(entity);
         });
     }
 }

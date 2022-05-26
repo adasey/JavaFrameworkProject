@@ -61,16 +61,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public PageResultDTO<Member, MemberEntity> readListBy(PageRequestDTO pageRequestDTO) {
-        Sort sorted;
-
-        if (pageRequestDTO.getOrder() == 1) {
-            sorted = Sort.by("seq").ascending();
-        }
-        else {
-            sorted = Sort.by("seq").descending();
-        }
-
-        Pageable pageable = pageRequestDTO.getPageable(sorted);
+        Pageable pageable = pageRequestDTO.getPageable(Sort.by("seq").descending());
 
         BooleanBuilder booleanBuilder = findByCondition(pageRequestDTO);
 
@@ -120,33 +111,5 @@ public class MemberServiceImpl implements MemberService {
         MemberEntity entity = dtoToEntity(member);
         //memberRepository.delete(entity); entity로 들어온 값 삭제
         memberRepository.deleteById(entity.getSeq());
-    }
-
-    public Member entityToDto(MemberEntity entity) {
-        Member member = Member.builder()
-                .seq(entity.getSeq())
-                .id(entity.getId())
-                .pw(entity.getPw())
-                .name(entity.getName())
-                .email(entity.getEmail())
-                .phone(entity.getPhone())
-                .address(entity.getAddress())
-                .build();
-
-        return member;
-    }
-
-    public MemberEntity dtoToEntity(Member member) {
-        MemberEntity entity = MemberEntity.builder()
-                .seq(member.getSeq())
-                .id(member.getId())
-                .pw(member.getPw())
-                .name(member.getName())
-                .email(member.getEmail())
-                .phone(member.getPhone())
-                .address(member.getAddress())
-                .build();
-
-        return entity;
     }
 }
