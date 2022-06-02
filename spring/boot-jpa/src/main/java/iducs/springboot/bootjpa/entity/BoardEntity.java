@@ -20,6 +20,6 @@ public class BoardEntity extends BaseEntity {
     private String title;
     private String content;
 
-    @ManyToOne
-    private MemberEntity writer;
+    @ManyToOne(fetch = FetchType.LAZY) // 지연 로딩, join에 대해 나중에 필요시에만 사용한다.
+    private MemberEntity writer; // 1대 다 관계 연결
 }

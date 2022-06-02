@@ -17,7 +17,7 @@ import java.util.function.Function;
 @Service
 @Log4j2
 @RequiredArgsConstructor
-public class BoardServiceImpl implements BoardService {
+public class BoardServiceImpl implements BoardService, BoardConversionService {
     private final BoardRepository boardRepository;
 
     @Override
@@ -29,6 +29,23 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    public Long modifyById(Board dto) {
+        return null;
+    }
+
+    @Override
+    public Board getById(Long bor_id) {
+        Object result = boardRepository.getBoardWithWriter(bor_id);
+        Object[] resultEntity = (Object[]) result;
+        return entityToDto((BoardEntity) resultEntity[0], (MemberEntity) resultEntity[1], (Long) resultEntity[2]);
+    }
+
+    @Override
+    public void deleteWithRepliesById(Long bor_id) {
+
+    }
+
+    @Override
     public PageResultDTO<Board, Object[]> getList(PageRequestDTO pageRequestDTO) {
         log.info(">>>>" + pageRequestDTO);
         // entites -> object[], dto - board
@@ -36,4 +53,38 @@ public class BoardServiceImpl implements BoardService {
         Page<Object[]> result = boardRepository.getBoardWithReplyCount(pageRequestDTO.getPageable(Sort.by("bor_id").descending()));
         return new PageResultDTO<>(result, fn);
     }
+
+    @Override
+    public BoardEntity dtoToEntity(Board dto) {
+        MemberEntity memberEntity = MemberEntity.builder()
+                .seq(dto.getWriterSeq())
+                .build();
+        BoardEntity entity = BoardEntity.builder()
+                .bor_id(dto.getBor_id())
+                .title(dto.getTitle())
+                .content(dto.getContent())
+                .writer(memberEntity)
+                .build();
+
+        return entity;
+    }
+
+    @Override
+    public Board entityToDto(BoardEntity entity, MemberEntity member, Long replyCount) {
+        Board dto = Board.builder()
+                .bor_id(entity.getBor_id())
+                .title(entity.getTitle())
+                .content(entity.getContent())
+                .writerSeq(member.getSeq())
+                .writerId(member.getId())
+                .writerName(member.getName())
+                .writerEmail(member.getEmail())
+                .regDate(entity.getRegDate())
+                .modDate(entity.getModDate())
+                .replyCount(replyCount.intValue())
+                .build();
+
+        return dto;
+    }
+
 }
