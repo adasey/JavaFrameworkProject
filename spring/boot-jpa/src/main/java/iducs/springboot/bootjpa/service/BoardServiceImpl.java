@@ -6,12 +6,15 @@ import iducs.springboot.bootjpa.domain.PageResultDTO;
 import iducs.springboot.bootjpa.entity.BoardEntity;
 import iducs.springboot.bootjpa.entity.MemberEntity;
 import iducs.springboot.bootjpa.repository.BoardRepository;
+import iducs.springboot.bootjpa.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 @Service
@@ -19,6 +22,7 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService, BoardConversionService {
     private final BoardRepository boardRepository;
+    private final ReplyRepository replyRepository;
 
     @Override
     public Long register(Board dto) {
@@ -30,19 +34,32 @@ public class BoardServiceImpl implements BoardService, BoardConversionService {
 
     @Override
     public Long modifyById(Board dto) {
-        return null;
+        Optional<BoardEntity> result = boardRepository.findById(dto.getBor_id());
+        BoardEntity boardEntity = null;
+
+        if (result.isPresent()) {
+            boardEntity = (BoardEntity) result.get();
+            boardEntity.changeTitle(dto.getTitle());
+            boardEntity.changeContent(dto.getContent());
+            boardRepository.save(boardEntity);
+        }
+
+        return boardEntity.getBor_id();
     }
 
     @Override
     public Board getById(Long bor_id) {
         Object result = boardRepository.getBoardWithWriter(bor_id);
         Object[] resultEntity = (Object[]) result;
+
         return entityToDto((BoardEntity) resultEntity[0], (MemberEntity) resultEntity[1], (Long) resultEntity[2]);
     }
 
+    @Transactional // 실행 중단에도 계속 실행됨.
     @Override
     public void deleteWithRepliesById(Long bor_id) {
-
+        replyRepository.deleteByBor_id(bor_id);
+        boardRepository.deleteById(bor_id); // board record 객체 삭제
     }
 
     @Override
@@ -51,6 +68,7 @@ public class BoardServiceImpl implements BoardService, BoardConversionService {
         // entites -> object[], dto - board
         Function<Object[], Board> fn = (entities -> entityToDto((BoardEntity) entities[0], (MemberEntity) entities[1], (Long) entities[2]));
         Page<Object[]> result = boardRepository.getBoardWithReplyCount(pageRequestDTO.getPageable(Sort.by("bor_id").descending()));
+
         return new PageResultDTO<>(result, fn);
     }
 
@@ -59,6 +77,7 @@ public class BoardServiceImpl implements BoardService, BoardConversionService {
         MemberEntity memberEntity = MemberEntity.builder()
                 .seq(dto.getWriterSeq())
                 .build();
+
         BoardEntity entity = BoardEntity.builder()
                 .bor_id(dto.getBor_id())
                 .title(dto.getTitle())
