@@ -61,4 +61,11 @@ public class BoardServiceTest {
         System.out.println("Writer = " + boardEntity.getWriter());
     }
 
+//    @Transactional
+    @Test
+    void testDeleteWithRepliesById() {
+        Long bor_id = 3L;
+        boardService.deleteWithRepliesById(bor_id);
+    }
+
 }

@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Random;
 import java.util.stream.IntStream;
 
-@Transactional
 @SpringBootTest
 public class ReplyTest {
 
@@ -39,7 +38,7 @@ public class ReplyTest {
 
     @Test
     void replyDelete(){
-        
+
     }
 
 }
