@@ -49,7 +49,7 @@ public class BoardServiceImpl implements BoardService, BoardConversionService {
 
     @Override
     public Board getById(Long bor_id) {
-        Object result = boardRepository.getBoardWithWriter(bor_id);
+        Object result = boardRepository.getBoardByBor_id(bor_id);
         Object[] resultEntity = (Object[]) result;
 
         return entityToDto((BoardEntity) resultEntity[0], (MemberEntity) resultEntity[1], (Long) resultEntity[2]);

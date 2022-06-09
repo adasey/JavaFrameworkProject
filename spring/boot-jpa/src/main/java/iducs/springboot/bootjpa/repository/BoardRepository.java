@@ -19,8 +19,6 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
 
     @Query(value = "select b, w, count(r) " + "from BoardEntity b left join b.writer w " +
             "left join ReplyEntity r on r.boardEntity = b " + "group by b",
-            countQuery = "select  count(b) from BoardEntity b")
+            countQuery = "select  count(b) from BoardEntity b") // 복잡한 질의를 자바로 객체를 통해 저리하기 위함.
     Page<Object[]> getBoardWithReplyCount(Pageable pageable);
-
-
 }
