@@ -12,7 +12,7 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="../dist/css/adminlte.min.css">
 </head>
-<body class="hold-transition sidebar-mini">
+<body class="dark-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed sidebar-closed sidebar-collapse" style="height: auto;">
 
 <div class="wrapper">
 
@@ -46,45 +46,46 @@
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">회원 목록</h3>
+                <form th:action="@{'/members/lists'}" th:method="get">
+                  <div class="card-tools">
+                    <div class="col-md-5 float-right">
+                      <div class="card-group">
+                        <div class="input-group input-group-sm=" style="width: 450px;">
+                          <div class="btn-group form-control">
+                            <button type="submit" class="btn btn-primary" name="order" text="내림" value="0" th:attr="aria-pressed=${pageRequestDTO.order == '0' ? 'true' : 'false'}">
+                            </button>
+                            <button type="submit" class="btn btn-primary" name="order" text="오름" value="1" th:attr="aria-pressed=${pageRequestDTO.order == '1' ? 'true' : 'false'}">
+                            </button>
+                          </div>
 
-                <div class="card-tools">
-                  <div class="card-group">
-                    <ul class="nav nav-pills ml-auto">
-                      <li class="nav-item">
-                        <a class="nav-link active" th:href="@{/members/lists(page=${page}, order=${0}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword})}" data-toggle="tab" th:selected="${pageRequestDTO.order == 0}">내림차순</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" th:href="@{/members/lists(page=${page}, order=${1}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword})}" data-toggle="tab" th:selected="${pageRequestDTO.order == 0}">오름차순</a>
-                      </li>
-                    </ul>
+                          <select class="form-control" name="size">
+                            <option value="5" th:selected="${pageRequestDTO.size == 5}">5</option>
+                            <option value="10" th:selected="${pageRequestDTO.size == 10}">10</option>
+                            <option value="20" th:selected="${pageRequestDTO.size == 20}">20</option>
+                            <option value="50" th:selected="${pageRequestDTO.size == 50}">50</option>
+                          </select>
 
-<!--                    <div th:switch="${pageRequestDTO.type != null ? true : null}">-->
-<!--                      <a th:case="${true}" th:href="@{/members/lists(order=1, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword})}">true</a>-->
-<!--                      <a th:case="${null}" th:href="@{/members/lists(page=${page})}">null</a>-->
-<!--                    </div>-->
+                          <select class="form-control" name="type">
+                            <option value="" th:selected="${pageRequestDTO.type == ''}"> 선택 </option>
+                            <option value="e" th:selected="${pageRequestDTO.type == 'e'}">email</option>
+                            <option value="p" th:selected="${pageRequestDTO.type == 'p'}">phone</option>
+                            <option value="a" th:selected="${pageRequestDTO.type == 'a'}">address</option>
+                            <option value="ea" th:selected="${pageRequestDTO.type == 'ea'}">email+address</option>
+                          </select>
+                          <input type="text" name="keyword" class="form-control col-6" placeholder="keyword" th:field="*{pageRequestDTO.keyword}">
 
-                    <form th:action="@{'/members/lists'}" th:method="get">
-                      <div class="input-group input-group-sm" style="width: 350px;">
-                        <select class="form-control" name="type">
-                          <option value=""> 선택 </option>
-                          <option value="e">email</option>
-                          <option value="p">phone</option>
-                          <option value="a">address</option>
-                          <option value="ea">email+address</option>
-                        </select>
-                        <input type="text" name="keyword" class="form-control float-right" placeholder="keyword">
-
-                        <div class="input-group-append">
-                          <button type="submit" class="btn btn-default">
-                            <i class="fas fa-search"></i>
-                          </button>
+                          <div class="input-group-append">
+                            <button type="submit" class="btn btn-default">
+                              <i class="fas fa-search"></i>
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </form>
+                    </div>
                   </div>
-
-                </div>
+                </form>
               </div>
+
               <!-- /.card-header -->
               <div class="card-body">
                 <table class="table table-bordered">
@@ -112,12 +113,11 @@
                   </tbody>
                 </table>
               </div>
+
               <!-- /.card-body -->
               <div class="card-footer">
                 <nav aria-label="Contacts Page Navigation">
                   <ul class="pagination justify-content-center m-0">
-<!--                    <li class="page-item active"><a class="page-link" href="#">1</a></li>-->
-<!--                    <li class="page-item"><a class="page-link" href="#">2</a></li>-->
                     <li class="page-item" th:if="${list.firstPage}">
                       <a class="page-link" th:href="@{/members/lists(page=1, type=${pageRequestDTO.type}, order=${pageRequestDTO.order}, keyword=${pageRequestDTO.keyword})}">
                         <b><<</b>
@@ -145,15 +145,16 @@
                         <b>>></b>
                       </a>
                     </li>
-
                 </ul>
               </nav>
               </div>
             </div>
             <!-- /.card -->
+
           </div>
         </div>
-      </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.container-fluid -->
     </section>
     <!-- /.content -->
   </div>

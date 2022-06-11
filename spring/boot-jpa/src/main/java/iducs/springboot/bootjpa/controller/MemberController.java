@@ -2,8 +2,10 @@ package iducs.springboot.bootjpa.controller;
 
 import iducs.springboot.bootjpa.domain.Member;
 import iducs.springboot.bootjpa.domain.PageRequestDTO;
+import iducs.springboot.bootjpa.service.MemberPageService;
 import iducs.springboot.bootjpa.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,8 +14,10 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/members")
 @RequiredArgsConstructor
+@Slf4j
 public class MemberController {
     private final MemberService memberService;
+    private final MemberPageService memberPageService;
 
     // -> 위의 구문 = MemberService ms = new MemberServiceImpl() 와 같음 spring의 기능
 //    public MemberController(MemberService memberService) {
@@ -30,7 +34,7 @@ public class MemberController {
     public String postMember(@ModelAttribute("member") Member member, Model model) {
         memberService.create(member);
         model.addAttribute("member", member);
-        return "redirect:members/lists"; // 해당 방식으로 리턴에 getMember 함수 호출 시 URI mapping 적용안됨. 이 post 함수 이후로 members에 접근이 가능하나
+        return "redirect:/members/lists"; // 해당 방식으로 리턴에 getMember 함수 호출 시 URI mapping 적용안됨. 이 post 함수 이후로 members에 접근이 가능하나
         // URI 상 members와 members/info의 차이가 있으므로 주의
     }
 
@@ -41,7 +45,8 @@ public class MemberController {
 
     @GetMapping("/lists")
     public String getMembers(PageRequestDTO pageRequestDTO, Model model) {
-        model.addAttribute("list", memberService.readListBy(pageRequestDTO));
+        log.info("controller take object : {}", pageRequestDTO);
+        model.addAttribute("list", memberPageService.readListBy(pageRequestDTO));
         return "members/lists";
     }
 
@@ -76,38 +81,3 @@ public class MemberController {
         return "redirect:/members/lists"; // members/member에 새롭게
     }
 }
-//    @GetMapping("/{idx}/deleteForm")
-//    public String getDelform(@PathVariable("idx") Long seq, Model model) {
-//        Member member = memberService.readById(seq);
-//        model.addAttribute("member", member);
-//        return "members/member";
-//    }
-
-//    @GetMapping("/{idx}")
-//    public String getMember(@PathVariable("idx") Long mno, Model model) {
-//        Member member = memberService.readById(mno);
-//        model.addAttribute("member", member);
-//        return "/members/member";
-//    }
-
-//    @GetMapping("/{idx}/upform")
-//    public String getUpform(@PathVariable("idx") Long mno, Model model) {
-//        Member member = memberService.readById(mno);
-//        model.addAttribute("member", member);
-//        return "/members/upform";
-//    }
-
-//    @PutMapping("/{idx}")
-//    public String putMember(@ModelAttribute("member") Member member, Model model) {
-//        memberService.update(member);
-//        model.addAttribute("member", member);
-//        return "/members/member";
-//    }
-
-//
-//    @GetMapping("/th")
-//    public String getThymeleaf(){
-//        return "thymeleaf";
-//    }
-//
-

@@ -2,7 +2,7 @@ package iducs.springboot.bootjpa.controller;
 
 import iducs.springboot.bootjpa.domain.Board;
 import iducs.springboot.bootjpa.domain.PageRequestDTO;
-import iducs.springboot.bootjpa.repository.BoardRepository;
+import iducs.springboot.bootjpa.service.BoardPageService;
 import iducs.springboot.bootjpa.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class BoardController {
     private final BoardService boardService;
+    private final BoardPageService boardPageService;
 
     @GetMapping("")
     public String getBoards(PageRequestDTO pageRequestDTO, Model model) {

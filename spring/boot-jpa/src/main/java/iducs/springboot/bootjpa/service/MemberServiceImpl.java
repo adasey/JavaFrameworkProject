@@ -9,6 +9,7 @@ import iducs.springboot.bootjpa.entity.MemberEntity;
 import iducs.springboot.bootjpa.entity.QMemberEntity;
 import iducs.springboot.bootjpa.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -21,7 +22,8 @@ import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
-public class MemberServiceImpl implements MemberService {
+@Slf4j
+public class MemberServiceImpl implements MemberService, MemberPageService, MemberConversionService {
     private final MemberRepository memberRepository;
 
     @Override
@@ -61,16 +63,20 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public PageResultDTO<Member, MemberEntity> readListBy(PageRequestDTO pageRequestDTO) {
-        Pageable pageable = pageRequestDTO.getPageable(Sort.by("seq").descending());
+        Sort sort = pageRequestDTO.getOrder() == 0 ? Sort.by("seq").descending() : Sort.by("seq").ascending();
+        Pageable pageable = pageRequestDTO.getPageable(sort);
 
         BooleanBuilder booleanBuilder = findByCondition(pageRequestDTO);
+        log.info("boolean check : {}", booleanBuilder);
 
         Page<MemberEntity> result = memberRepository.findAll(booleanBuilder, pageable);
         Function<MemberEntity, Member> fn = (entity -> entityToDto(entity));
+
         return new PageResultDTO<>(result, fn);
     }
 
-    private BooleanBuilder findByCondition(PageRequestDTO pageRequestDTO) {
+    @Override
+    public BooleanBuilder findByCondition(PageRequestDTO pageRequestDTO) {
         String type = pageRequestDTO.getType();
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 
@@ -84,8 +90,6 @@ public class MemberServiceImpl implements MemberService {
         }
         String keyword = pageRequestDTO.getKeyword();
 
-        System.out.println(qMemberEntity.email);
-
         BooleanBuilder conditionBuilder = new BooleanBuilder();
         if(type.contains("e")) // email로 검색
             conditionBuilder.or(qMemberEntity.email.contains(keyword));
@@ -97,7 +101,6 @@ public class MemberServiceImpl implements MemberService {
         booleanBuilder.and(conditionBuilder);
         return booleanBuilder; // 완성된 조건 or 술어(predicate)
     }
-
 
     @Override
     public void update(Member member) {
@@ -111,5 +114,35 @@ public class MemberServiceImpl implements MemberService {
         MemberEntity entity = dtoToEntity(member);
         //memberRepository.delete(entity); entity로 들어온 값 삭제
         memberRepository.deleteById(entity.getSeq());
+    }
+
+    @Override
+    public Member entityToDto(MemberEntity entity) {
+        Member dto = Member.builder()
+                .seq(entity.getSeq())
+                .id(entity.getId())
+                .pw(entity.getPw())
+                .name(entity.getName())
+                .email(entity.getEmail())
+                .phone(entity.getPhone())
+                .address(entity.getAddress())
+                .build();
+
+        return dto;
+    }
+
+    @Override
+    public MemberEntity dtoToEntity(Member member) {
+        MemberEntity entity = MemberEntity.builder()
+                .seq(member.getSeq())
+                .id(member.getId())
+                .pw(member.getPw())
+                .name(member.getName())
+                .email(member.getEmail())
+                .phone(member.getPhone())
+                .address(member.getAddress())
+                .build();
+
+        return entity;
     }
 }

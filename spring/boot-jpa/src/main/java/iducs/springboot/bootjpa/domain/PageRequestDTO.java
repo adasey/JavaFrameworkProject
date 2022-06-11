@@ -12,7 +12,7 @@ import org.springframework.data.domain.Sort;
 public class PageRequestDTO {
     private int page;
     private int size;
-    private int order = 0;
+    private int order;
     private String type; // e - email, p - phone, a - address 페이지 조회 기준
     private String keyword; // 검색어
 

@@ -1,16 +1,23 @@
 package iducs.springboot.bootjpa.service;
 
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import iducs.springboot.bootjpa.domain.Board;
+import iducs.springboot.bootjpa.domain.Member;
 import iducs.springboot.bootjpa.domain.PageRequestDTO;
 import iducs.springboot.bootjpa.domain.PageResultDTO;
 import iducs.springboot.bootjpa.entity.BoardEntity;
 import iducs.springboot.bootjpa.entity.MemberEntity;
+import iducs.springboot.bootjpa.entity.QBoardEntity;
+import iducs.springboot.bootjpa.entity.QMemberEntity;
 import iducs.springboot.bootjpa.repository.BoardRepository;
 import iducs.springboot.bootjpa.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +27,7 @@ import java.util.function.Function;
 @Service
 @Log4j2
 @RequiredArgsConstructor
-public class BoardServiceImpl implements BoardService, BoardConversionService {
+public class BoardServiceImpl implements BoardService, BoardPageService, BoardConversionService {
     private final BoardRepository boardRepository;
     private final ReplyRepository replyRepository;
 
@@ -67,9 +74,56 @@ public class BoardServiceImpl implements BoardService, BoardConversionService {
         log.info(">>>>" + pageRequestDTO);
         // entites -> object[], dto - board
         Function<Object[], Board> fn = (entities -> entityToDto((BoardEntity) entities[0], (MemberEntity) entities[1], (Long) entities[2]));
+        log.info("get test entities : {}", fn);
         Page<Object[]> result = boardRepository.getBoardWithReplyCount(pageRequestDTO.getPageable(Sort.by("bor_id").descending()));
 
         return new PageResultDTO<>(result, fn);
+    }
+
+//    @Query(value = "select b, w, count(r) " + "from BoardEntity b left join b.writer w " +
+//            "left join ReplyEntity r on r.boardEntity = b " + "group by b",
+//            countQuery = "select  count(b) from BoardEntity b")
+
+    @Override
+    public PageResultDTO<Board, Object[]> readListBy(PageRequestDTO pageRequestDTO) {
+        log.info("read start");
+        Sort sort = pageRequestDTO.getOrder() == 0 ? Sort.by("bor_id").descending() : Sort.by("bor_id").ascending();
+        Pageable pageable = pageRequestDTO.getPageable(sort);
+
+        BooleanBuilder booleanBuilder = findByCondition(pageRequestDTO);
+
+        Page<BoardEntity> result = boardRepository.findAll(booleanBuilder, pageable);
+        Function<Object[], Board> fn = (entities -> entityToDto((BoardEntity) entities[0], (MemberEntity) entities[1], (Long) entities[2]));
+        log.info("test : {}", fn);
+
+        return new PageResultDTO<>(result, fn);
+    }
+
+    @Override
+    public BooleanBuilder findByCondition(PageRequestDTO pageRequestDTO) {
+        String type = pageRequestDTO.getType();
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+
+        QBoardEntity qBoardEntity = QBoardEntity.boardEntity;
+
+        BooleanExpression expression = qBoardEntity.bor_id.gt(0L); // where seq > 0 and title == "ti"
+        booleanBuilder.and(expression);
+
+        if(type == null || type.trim().length() == 0) {
+            return booleanBuilder;
+        }
+        String keyword = pageRequestDTO.getKeyword();
+
+        BooleanBuilder conditionBuilder = new BooleanBuilder();
+        if(type.contains("t")) // title로 검색
+            conditionBuilder.or(qBoardEntity.title.contains(keyword));
+        if(type.contains("u")) // 유저 id로 검색
+            conditionBuilder.or(qBoardEntity.writer.id.contains(keyword));
+        if(type.contains("b")) // 내용으로 검색
+            conditionBuilder.or(qBoardEntity.bor_id.like(keyword));
+
+        booleanBuilder.and(conditionBuilder);
+        return booleanBuilder; // 완성된 조건 or 술어(predicate)
     }
 
     @Override
@@ -105,5 +159,4 @@ public class BoardServiceImpl implements BoardService, BoardConversionService {
 
         return dto;
     }
-
 }

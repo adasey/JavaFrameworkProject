@@ -16,6 +16,7 @@ public class PageResultDTO<DTO, EN> { // Generics
 
     private int currentPage; // 현재 페이지
     private int sizeOfPage; // 페이지 당 크기
+    private int numberOfPage;
 
     private int startPage, endPage; // 페이지 목록의 시작 페이지 번호, 마지막 페이지 번호
     private boolean firstPage, lastPage;
@@ -30,9 +31,9 @@ public class PageResultDTO<DTO, EN> { // Generics
     }
 
     public void makePageList(Pageable pageable) {
-        this.currentPage = pageable.getPageNumber() + 1;
-        this.sizeOfPage = pageable.getPageSize();
+        this.setPageSizeAndCurrent(pageable);
         double pageDouble = (double) sizeOfPage;
+        this.setNumberOfPage(5);
         // sizeOfPage = 10, pageDouble 10.0, currentPage = 2
         // 2 / 10.0 = 0.2 -> Math.ceil(0.2) 올림 : 1 * 10 = 10(일시적인 마지막 페이지)
 
@@ -53,4 +54,13 @@ public class PageResultDTO<DTO, EN> { // Generics
         pageList = IntStream.rangeClosed(startPage, endPage).boxed().collect(Collectors.toList());
     }
 
+    public void setPageSizeAndCurrent(Pageable pageable) {
+        this.currentPage = pageable.getPageNumber() + 1;
+        this.setNumberOfPage(5);
+        this.sizeOfPage = this.numberOfPage;
+    }
+
+    public void setNumberOfPage(int numberOfPage) {
+        this.numberOfPage = numberOfPage;
+    }
 }

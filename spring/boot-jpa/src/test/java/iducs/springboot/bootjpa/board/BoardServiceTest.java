@@ -5,6 +5,7 @@ import iducs.springboot.bootjpa.domain.PageRequestDTO;
 import iducs.springboot.bootjpa.domain.PageResultDTO;
 import iducs.springboot.bootjpa.entity.BoardEntity;
 import iducs.springboot.bootjpa.repository.BoardRepository;
+import iducs.springboot.bootjpa.service.BoardPageService;
 import iducs.springboot.bootjpa.service.BoardService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class BoardServiceTest {
 
     @Autowired
     BoardRepository boardRepository;
+
+    @Autowired
+    BoardPageService boardPageService;
 
     @Test
     public void testRegister() {
